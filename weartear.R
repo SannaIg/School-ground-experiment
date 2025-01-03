@@ -6,9 +6,7 @@ library (glmmTMB)
 df_WandT<- df_tot %>% filter(date!= "firstmeasure")
 sum(is.na(df_WandT$WandT))
 
-
 df_WandT$plid<-as.factor(df_WandT$plid)
-
 
 df_WandT %>% 
   group_by(species, sqsize, date) %>% 
@@ -21,30 +19,8 @@ df_WandT %>%
   geom_errorbar(aes(ymin = mWandT - sd, ymax = mWandT + sd), 
                 position = position_dodge(0.9), width = 0.1)
 
-
-df_WandT_compare_plantings <- df_WandT[df_WandT$species %in% c("Cornus sanguinea", "Ribes rubrum", "Diervilla lonicera"), ]
-
-model_compare <- glmmTMB(
-  WandT/100 ~ planting  * date + sqsize + (1 | id),
-  family = beta_family(),
-  ziformula = ~ planting  * date + sqsize,
-  data = df_WandT
-)
-
-summary(model_compare)
-
-#Logging ´99% wear and tear to dead plants
-df_WandT$WandT[is.na(df_WandT$length)] <- 99
-
-# Replace 'WandT' with NA for rows where 'height' is NA
-df_WandT$WandT[is.na(df_WandT$length)] <- NA
-
-#Changing NAs to 0 in WandT
-df_WandT$WandT[is.na(df_WandT$WandT)] <- 0
-
 #Dividing WandT by 100, to give a value between 0 and 1
 df_WandT$WandT_divided <- df_WandT$WandT / 100
-
 
 #Model for wear and tear 
 model_WandT <- glmmTMB(
@@ -54,11 +30,8 @@ model_WandT <- glmmTMB(
   data = df_WandT
 )
 
-summary(model_WandT)
 Anova(model_WandT, component = "zi")
-
-df_WandT$date <- relevel(df_WandT$date, ref = "june23")
-
+Anova(model_WandT, component = "cond")
 
 # Get estimated marginal means for zero inflation part of the model
 cld(emmeans(model_WandT, ~ zon|species*planting+ sqsize, component = "zi"), Letters = letters)
@@ -71,12 +44,7 @@ zi_contrasts <- contrast(zi_emmeans, method = "pairwise")
 summary(zi_contrasts)
 
 
-
-
-
-
 ##Cumulative wear and tear visualization
-
 
 #Calculate cumulative wear and tear
 df_cumuWT <- df_WandT %>%
