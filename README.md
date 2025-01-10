@@ -29,9 +29,6 @@ This project analyzes wear and tear data for plants grown in different square si
 - **Bar Plots**: Show trends in mean wear and tear over time, grouped by species and square size.
 - **Heatmaps**: Visualize spatial distribution of cumulative wear and tear for different square layouts.
 
-Example:
-![Bar Plot](figures/bar_plot.png)
-![Heatmap](figures/heatmap.png)
 
 ### Statistical Insights
 - Identified significant interactions between species, date, and square size.
