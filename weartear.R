@@ -1,5 +1,5 @@
 # Analysis of Wear and Tear Data
-# Author: [Your Name]
+# Author: Sanna Ignell
 # Purpose: Analyze and visualize wear and tear data for plants in different square sizes.
 
 # Load necessary libraries
